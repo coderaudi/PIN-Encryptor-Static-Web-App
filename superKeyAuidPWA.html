@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Audi PIN Encryptor</title>
+  <style>
+    :root {
+      --main-red: #e53935;
+      --deep-red: #b71c1c;
+      --black: #121212;
+      --light-bg: #1e1e1e;
+      --white: #f9f9f9;
+      --gray: #ccc;
+      --soft-red: #fbe9e7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--black);
+      color: var(--white);
+      height: 100%;
+      width: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .center-box,
+    .container {
+      background: var(--light-bg);
+      width: 100%;
+      max-width: 450px;
+      padding: 28px 20px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(255, 0, 0, 0.15);
+      height: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--main-red);
+      margin-bottom: 24px;
+      font-size: 1.8rem;
+    }
+
+    .start-label {
+      text-align: center;
+      margin-bottom: 16px;
+      font-size: 1rem;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background-color: #2a2a2a;
+      color: var(--white);
+      margin-bottom: 18px;
+    }
+
+    input[type="text"]::placeholder {
+      color: #aaa;
+    }
+
+    input[readonly] {
+      background-color: #444;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .action-btn {
+      width: 100%;
+      padding: 16px;
+      font-size: 17px;
+      background-color: var(--main-red);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 4px;
+    }
+
+    .action-btn:hover {
+      background-color: var(--deep-red);
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .back-btn {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid var(--gray);
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 52px;
+      height: 28px;
+    }
+
+    .toggle-switch input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--gray);
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 3px;
+      background-color: var(--white);
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+
+    input:checked+.slider {
+      background-color: var(--main-red);
+    }
+
+    input:checked+.slider::before {
+      transform: translateX(24px);
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--soft-red);
+      border-left: 4px solid var(--main-red);
+      padding-left: 10px;
+      margin-bottom: 20px;
+    }
+
+    .field-row {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: var(--white);
+    }
+
+    .big-text {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--main-red);
+      text-align: center;
+      word-break: break-word;
+    }
+
+    .output {
+      margin-top: 18px;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+      text-align: center;
+      background-color: #2c2c2c;
+      border-radius: 8px;
+      word-wrap: break-word;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      .center-box,
+      .container {
+        padding: 20px 16px;
+        border-radius: 16px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+      }
+
+      .action-btn {
+        padding: 14px;
+        font-size: 16px;
+      }
+
+      .back-btn {
+        font-size: 13px;
+        padding: 8px 12px;
+      }
+
+      .big-text {
+        font-size: 18px;
+      }
+
+      .output {
+        font-size: 14px;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Landing Screen -->
+  <div class="center-box" id="startScreen">
+    <h1>🔐 Audi PIN Encryptor</h1>
+    <div class="start-label">Enter Your Audi Key</div>
+    <input type="text" id="startKey" placeholder="e.g. key" autocapitalize="off" autocomplete="off" />
+    <button onclick="startApp()" class="action-btn">Ignite Car</button>
+  </div>
+
+  <!-- Main App -->
+  <div class="container" id="mainApp" style="display:none;">
+    <div class="top-bar">
+      <button class="back-btn" onclick="goBack()">Reverse</button>
+      <label class="toggle-switch">
+        <input type="checkbox" id="modeToggle" onchange="toggleSection()" />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- Encryption Section -->
+    <div id="encryptionSection">
+      <div class="section-title">🔒 Encrypt PIN</div>
+      <label>SuperAudi Code:</label>
+      <div class="big-text" id="encSuperCodeDisplay"></div>
+
+      <div class="field-row">
+        <label for="encPIN">General PIN:</label>
+        <input type="text" id="encPIN" placeholder="Enter PIN like 1234" inputmode="numeric" pattern="[0-9]*" />
+      </div>
+
+      <button class="action-btn" onclick="encrypt()">Accelerate</button>
+      <div class="output" id="encResult">Generated value will appear here.</div>
+    </div>
+
+    <!-- Decryption Section -->
+    <div id="decryptionSection" style="display:none;">
+      <div class="section-title">🔓 Decrypt Hash</div>
+      <label>SuperAudi Code:</label>
+      <div class="big-text" id="decSuperCodeDisplay"></div>
+
+      <div class="field-row">
+        <label for="decHash">Hash Key Code:</label>
+        <input type="text" id="decHash" placeholder="Enter hash key code" autocapitalize="off" />
+      </div>
+
+      <button class="action-btn" onclick="decrypt()">Neutral Gear</button>
+      <div class="output" id="decResult">Original PIN will appear here.</div>
+    </div>
+  </div>
+
+  <script>
+    function base64Encode(str) {
+      return btoa(unescape(encodeURIComponent(str)));
+    }
+
+    function base64Decode(str) {
+      try {
+        return decodeURIComponent(escape(atob(str)));
+      } catch {
+        return "";
+      }
+    }
+
+    function startApp() {
+      const key = document.getElementById("startKey").value.trim();
+      if (!key) {
+        alert("Please enter your Super Audi Key.");
+        return;
+      }
+      window.superAudiKey = key;
+      document.getElementById("startScreen").style.display = "none";
+      document.getElementById("mainApp").style.display = "block";
+      document.getElementById("encSuperCodeDisplay").innerText = key;
+      document.getElementById("decSuperCodeDisplay").innerText = key;
+    }
+
+    function goBack() {
+      document.getElementById("mainApp").style.display = "none";
+      const startScreen = document.getElementById("startScreen");
+      startScreen.style.display = "flex";
+      startScreen.style.flexDirection = "column";
+      startScreen.style.justifyContent = "center";
+      startScreen.style.alignItems = "center";
+      document.getElementById("startKey").value = "";
+      document.getElementById("encPIN").value = "";
+      document.getElementById("decHash").value = "";
+      document.getElementById("encResult").innerText = "Generated value will appear here.";
+      document.getElementById("decResult").innerText = "Original PIN will appear here.";
+      document.getElementById("modeToggle").checked = false;
+      toggleSection(false);
+    }
+
+    function toggleSection(forceEncrypt = null) {
+      const encSection = document.getElementById("encryptionSection");
+      const decSection = document.getElementById("decryptionSection");
+      const toggle = document.getElementById("modeToggle");
+
+      const isEncrypt = forceEncrypt !== null ? forceEncrypt : !toggle.checked;
+      encSection.style.display = isEncrypt ? "block" : "none";
+      decSection.style.display = isEncrypt ? "none" : "block";
+    }
+
+    function encrypt() {
+      const pin = document.getElementById("encPIN").value.trim();
+      if (!pin) {
+        alert("Please enter your PIN.");
+        return;
+      }
+
+      const key = window.superAudiKey;
+      const encoded = base64Encode(`${key}::${pin}`);
+      document.getElementById("encResult").innerText = encoded;
+    }
+
+    function decrypt() {
+      const hash = document.getElementById("decHash").value.trim();
+      if (!hash) {
+        alert("Please enter the hash key code.");
+        return;
+      }
+
+      const key = window.superAudiKey;
+      const decoded = base64Decode(hash);
+      if (!decoded.includes("::")) {
+        document.getElementById("decResult").innerText = "Invalid code.";
+        return;
+      }
+
+      const [decodedKey, pin] = decoded.split("::");
+      if (decodedKey !== key) {
+        document.getElementById("decResult").innerText = "Key mismatch.";
+      } else {
+        document.getElementById("decResult").innerText = pin;
+      }
+    }
+  </script>
+</body>
+
+</html>
